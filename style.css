@@ -1,65 +1,344 @@
-body {
+/* ===== RESET ===== */
+* {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== VARIÁVEIS ===== */
+:root {
+    --lava-dark: #4a0404;
+    --lava-medium: #8b0000;
+    --lava-bright: #cc3300;
+    --lava-glow: #ff4500;
+    --magma: #ff6600;
+    --ash-dark: #1a1a1a;
+    --ash-light: #2d2d2d;
+    --smoke: #4a4a4a;
+    --ember: #ffcc00;
+}
+
+/* ===== BODY ===== */
+body {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
     min-height: 100vh;
-}
-
-.container {
-    text-align: center;
-    width: 90%;
-    max-width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 20px;
+    position: relative;
+    overflow-x: hidden;
 }
 
+/* Partículas de lava caindo */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 50%, rgba(255,69,0,0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.container {
+    max-width: 500px;
+    width: 100%;
+    background: linear-gradient(145deg, #1f1f1f 0%, #111111 100%);
+    border-radius: 30px;
+    padding: 40px 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.05),
+                0 0 30px rgba(255,69,0,0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,69,0,0.3);
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6),
+                0 0 40px rgba(255,69,0,0.3);
+}
+
+/* Efeito de lava nas bordas */
+.container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        var(--lava-glow), 
+        var(--magma), 
+        var(--lava-bright),
+        var(--ember));
+    border-radius: 32px;
+    z-index: -1;
+    opacity: 0.5;
+    animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+    0%, 100% { opacity: 0.3; filter: blur(8px);}
+    50% { opacity: 0.7; filter: blur(12px);}
+}
+
+/* ===== PERFIL ===== */
 .profile-img {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
     border-radius: 50%;
-    border: 4px solid #4ecca3;
-    margin-bottom: 15px;
+    display: block;
+    margin: 0 auto 20px;
+    border: 3px solid transparent;
+    background: linear-gradient(45deg, var(--lava-dark), var(--lava-glow), var(--ember)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    box-shadow: 0 0 30px rgba(255,69,0,0.4);
+    transition: all 0.3s ease;
     object-fit: cover;
 }
 
+.profile-img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(255,69,0,0.6);
+}
+
+
+
+/* ===== TÍTULOS ===== */
 h1 {
-    margin: 10px 0;
-    font-size: 1.8rem;
+    text-align: center;
+    color: #ffffff;
+    font-size: 28px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(255,69,0,0.5);
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #fff, #ff9966);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .subtitle {
-    color: #4ecca3;
+    text-align: center;
+    color: #ff9966;
+    font-size: 14px;
+    letter-spacing: 1px;
+    position: relative;
+    display: inline-block;
+    width: 100%;
     margin-bottom: 30px;
-    font-weight: 300;
 }
 
+.subtitle::before,
+.subtitle::after {
+    content: '🌋';
+    font-size: 12px;
+    opacity: 0.7;
+    margin: 0 8px;
+    display: inline-block;
+    animation: tremor 2s ease-in-out infinite;
+}
+
+.subtitle::before {
+    content: '🌋';
+    margin-right: 10px;
+}
+
+.subtitle::after {
+    content: '🌋';
+    margin-left: 10px;
+}
+
+@keyframes tremor {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(2px); }
+}
+
+/* ===== LINKS ===== */
 .links {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    margin: 30px 0;
 }
 
 .link-card {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
+    display: block;
+    padding: 15px 25px;
+    background: linear-gradient(135deg, #2a1a1a 0%, #1a0a0a 100%);
+    color: #ff9966;
     text-decoration: none;
-    color: white;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
+    text-align: center;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,69,0,0.3);
+    backdrop-filter: blur(5px);
+}
+
+/* Efeito de lava dentro dos botões */
+.link-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent,
+        rgba(255,69,0,0.3),
+        rgba(255,102,0,0.5),
+        rgba(255,69,0,0.3),
+        transparent);
+    transition: left 0.6s ease;
+}
+
+.link-card:hover::before {
+    left: 100%;
 }
 
 .link-card:hover {
-    background: #4ecca3;
-    color: #1a1a2e;
-    transform: translateY(-3px);
+    background: linear-gradient(135deg, #3a2020 0%, #2a1010 100%);
+    color: #ffcc99;
+    transform: translateX(10px) scale(1.02);
+    border-color: rgba(255,69,0,0.6);
+    box-shadow: 0 5px 15px rgba(255,69,0,0.3);
 }
 
+/* Ícones personalizados nos links */
+.link-card:nth-child(1)::after {
+    content: ' 💼';
+    font-size: 18px;
+}
+
+.link-card:nth-child(2)::after {
+    content: ' 🐙';
+    font-size: 18px;
+}
+
+.link-card:nth-child(3)::after {
+    content: ' 📸';
+    font-size: 18px;
+}
+
+.link-card:nth-child(4)::after {
+    content: ' 📧';
+    font-size: 18px;
+}
+
+/* ===== FOOTER ===== */
 footer {
-    margin-top: 40px;
-    font-size: 0.8rem;
-    color: #999;
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,69,0,0.2);
+    position: relative;
+}
+
+footer p {
+    color: #ff9966;
+    font-size: 12px;
+    opacity: 0.8;
+    letter-spacing: 0.5px;
+}
+
+footer::before {
+    content: '🔥';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+/* ===== ANIMAÇÃO DE PARTICULAS (LAVA) ===== */
+@keyframes floatLava {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Pequenas partículas de lava */
+body::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Cria partículas de lava animadas */
+.particle {
+    position: fixed;
+    bottom: -20px;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, #ff6600, #cc3300);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: floatLava linear infinite;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        padding: 30px 20px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+    
+    .profile-img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .link-card:hover {
+        transform: translateX(5px) scale(1.01);
+    }
+}
+
+/* ===== SCROLLBAR PERSONALIZADA ===== */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #cc3300, #ff6600);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
 }
