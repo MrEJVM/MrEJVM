@@ -1,225 +1,173 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+function mostrarMensagem(rede) {
+    // Cria elemento de notificação
+    const notificacao = document.createElement('div');
+    notificacao.textContent = `🔴 ${rede}: Em breve disponível! 🌋`;
+    notificacao.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #cc3300, #8b0000);
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-weight: bold;
+        z-index: 1000;
+        animation: slideUp 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        border: 1px solid #ff6600;
+        font-family: monospace;
+        letter-spacing: 1px;
+    `;
+    
+    document.body.appendChild(notificacao);
+    
+    // Remove notificação após 3 segundos
+    setTimeout(() => {
+        notificacao.remove();
+    }, 3000);
 }
 
-body {
-    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding: 20px;
-    position: relative;
-    overflow-x: hidden;
+// ===== ANIMAÇÃO DE PARTÍCULAS DE LAVA =====
+function criarParticulas() {
+    const numParticulas = 30;
+    
+    for(let i = 0; i < numParticulas; i++) {
+        const particula = document.createElement('div');
+        particula.className = 'particle';
+        
+        // Propriedades aleatórias
+        const tamanho = Math.random() * 6 + 2;
+        const posX = Math.random() * window.innerWidth;
+        const duracao = Math.random() * 8 + 4;
+        const delay = Math.random() * 5;
+        
+        particula.style.cssText += `
+            left: ${posX}px;
+            width: ${tamanho}px;
+            height: ${tamanho}px;
+            animation-duration: ${duracao}s;
+            animation-delay: -${delay}s;
+            background: radial-gradient(circle, #ff6600, ${Math.random() > 0.5 ? '#ff4500' : '#cc3300'});
+        `;
+        
+        document.body.appendChild(particula);
+        
+        // Remove partícula após animação
+        particula.addEventListener('animationend', () => {
+            particula.remove();
+        });
+    }
 }
 
-.container {
-    max-width: 500px;
-    width: 100%;
-    background: linear-gradient(145deg, #1f1f1f 0%, #111111 100%);
-    border-radius: 30px;
-    padding: 40px 30px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5),
-                inset 0 1px 0 rgba(255,255,255,0.05),
-                0 0 30px rgba(255,69,0,0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,69,0,0.3);
-    position: relative;
-    z-index: 1;
-    transition: transform 0.3s ease;
-}
+// ===== EFEITO DE FUMACA AO PASSAR MOUSE =====
+document.querySelectorAll('.link-card').forEach(link => {
+    link.addEventListener('mouseenter', (e) => {
+        const smoke = document.createElement('div');
+        smoke.style.cssText = `
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(255,69,0,0.2) 0%, transparent 70%);
+            border-radius: 50px;
+            pointer-events: none;
+            animation: smokeRise 0.5s ease-out forwards;
+        `;
+        
+        link.style.position = 'relative';
+        link.appendChild(smoke);
+        
+        setTimeout(() => smoke.remove(), 500);
+    });
+});
 
-.container:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 25px 50px rgba(0,0,0,0.6),
-                0 0 40px rgba(255,69,0,0.3);
-}
-
-.container::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, #ff4500, #ff6600, #cc3300, #ffcc00);
-    border-radius: 32px;
-    z-index: -1;
-    opacity: 0.5;
-    animation: borderGlow 3s ease-in-out infinite;
-}
-
-@keyframes borderGlow {
-    0%, 100% { opacity: 0.3; filter: blur(8px);}
-    50% { opacity: 0.7; filter: blur(12px);}
-}
-
-.profile-img {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    display: block;
-    margin: 0 auto 20px;
-    border: 3px solid #ff6600;
-    box-shadow: 0 0 30px rgba(255,69,0,0.4);
-    transition: all 0.3s ease;
-    object-fit: cover;
-}
-
-.profile-img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 40px rgba(255,69,0,0.6);
-}
-
-h1 {
-    text-align: center;
-    color: #ffffff;
-    font-size: 28px;
-    margin-bottom: 10px;
-    text-shadow: 0 0 10px rgba(255,69,0,0.5);
-    background: linear-gradient(135deg, #fff, #ff9966);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.subtitle {
-    text-align: center;
-    color: #ff9966;
-    font-size: 14px;
-    letter-spacing: 1px;
-    width: 100%;
-    margin-bottom: 30px;
-}
-
-.subtitle::before,
-.subtitle::after {
-    content: '🌋';
-    font-size: 12px;
-    opacity: 0.7;
-    margin: 0 8px;
-    display: inline-block;
-    animation: tremor 2s ease-in-out infinite;
-}
-
-@keyframes tremor {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(2px); }
-}
-
-.links {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin: 30px 0;
-}
-
-.link-card {
-    display: block;
-    padding: 15px 25px;
-    background: linear-gradient(135deg, #2a1a1a 0%, #1a0a0a 100%);
-    color: #ff9966;
-    text-decoration: none;
-    text-align: center;
-    border-radius: 50px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(255,69,0,0.3);
-}
-
-.link-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,69,0,0.3), rgba(255,102,0,0.5), transparent);
-    transition: left 0.6s ease;
-}
-
-.link-card:hover::before {
-    left: 100%;
-}
-
-.link-card:hover {
-    background: linear-gradient(135deg, #3a2020 0%, #2a1010 100%);
-    color: #ffcc99;
-    transform: translateX(10px);
-    border-color: rgba(255,69,0,0.6);
-    box-shadow: 0 5px 15px rgba(255,69,0,0.3);
-}
-
-.link-card:nth-child(1)::after { content: ' 💼'; font-size: 18px; }
-.link-card:nth-child(2)::after { content: ' 🐙'; font-size: 18px; }
-.link-card:nth-child(3)::after { content: ' 📸'; font-size: 18px; }
-.link-card:nth-child(4)::after { content: ' 📧'; font-size: 18px; }
-
-footer {
-    text-align: center;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255,69,0,0.2);
-    position: relative;
-}
-
-footer p {
-    color: #ff9966;
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-footer::before {
-    content: '🔥';
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1a1a1a;
-    padding: 0 10px;
-    font-size: 14px;
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-2px); }
-    75% { transform: translateX(2px); }
-}
-
-.container:hover {
-    animation: shake 0.2s ease-in-out 2;
-}
-
-@media (max-width: 768px) {
-    .container {
-        margin: 20px;
-        padding: 30px 20px;
+// ===== ANIMAÇÕES CSS ADICIONAIS =====
+const styleSheet = document.createElement("style");
+styleSheet.textContent = `
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
     }
     
-    h1 {
-        font-size: 24px;
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+            visibility: hidden;
+        }
     }
     
-    .profile-img {
-        width: 100px;
-        height: 100px;
+    @keyframes smokeRise {
+        0% {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.8);
+        }
+        50% {
+            opacity: 0.5;
+            transform: translateX(-50%) scale(1.2);
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-30px) scale(1.5);
+        }
     }
+    
+    @keyframes lavaFlow {
+        0% {
+            background-position: 0% 50%;
+        }
+        100% {
+            background-position: 100% 50%;
+        }
+    }
+    
+    /* Efeito de tremor no container */
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-2px); }
+        75% { transform: translateX(2px); }
+    }
+    
+    .container:hover {
+        animation: shake 0.2s ease-in-out 2;
+    }
+`;
+document.head.appendChild(styleSheet);
+
+// ===== INICIALIZAÇÃO =====
+// Cria partículas a cada 3 segundos
+setInterval(criarParticulas, 3000);
+
+// Cria partículas iniciais
+criarParticulas();
+
+// ===== EFEITO DE TREMOR SIMULANDO VULCÃO =====
+let tremorTimeout;
+function simularTremor() {
+    const container = document.querySelector('.container');
+    if (container) {
+        container.style.animation = 'shake 0.3s ease-in-out';
+        setTimeout(() => {
+            container.style.animation = '';
+        }, 300);
+    }
+    
+    // Próximo tremor entre 10 e 30 segundos
+    const proximoTremor = Math.random() * 20000 + 10000;
+    tremorTimeout = setTimeout(simularTremor, proximoTremor);
 }
 
-::-webkit-scrollbar {
-    width: 10px;
-}
+// Inicia simulação de tremores
+simularTremor();
 
-::-webkit-scrollbar-track {
-    background: #1a1a1a;
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(45deg, #cc3300, #ff6600);
-    border-radius: 10px;
-}
+// ===== LOG NO CONSOLE =====
+console.log('%c🌋 CARTÃO DIGITAL VULCÂNICO ATIVADO! 🔥', 'color: #ff6600; font-size: 16px; font-weight: bold;');
+console.log('%cBem-vindo ao meu perjeto vulcânico!', 'color: #ff9966; font-size: 12px;');( estao separados em index,style e script)
